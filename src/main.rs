@@ -1,8 +1,14 @@
 extern crate clap;
+extern crate config;
 use clap::{Arg, App};
-use git2::{Repository, Branch};
+use std::fs;
+use std::collections::HashMap;
 
 fn main() {
+    let mut settings = config::Config::default();
+    settings
+        .merge(config::File::with_name("Settings")).unwrap();
+
     let message = App::new("cmt")
         .version("1.0")
         .about("Formats a git commit message")
@@ -18,6 +24,8 @@ fn main() {
     let response = message.value_of("message").unwrap_or("default.conf");
     println!("Value for response: {}", response);
 
+    println!("{:?}",
+        settings.try_into::<HashMap<String, String>>().unwrap());
 }
 
 
