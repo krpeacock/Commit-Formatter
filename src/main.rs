@@ -1,9 +1,13 @@
+extern crate chrono;
 extern crate config;
 extern crate console;
 extern crate dialoguer;
+use chrono::{DateTime, Utc};
 use dialoguer::{theme::ColorfulTheme, Input};
 use std::collections::HashMap;
 use std::error::Error;
+use std::fmt;
+use std::fs;
 use std::process::Command;
 
 #[derive(Debug)]
@@ -41,10 +45,34 @@ fn main() {
 }
 
 fn format(config: Config) {
-    println!("{:#?}", config);
-    let _make_commit = Command::new("/usr/local/bin/git")
+    let git_head =
+        fs::read_to_string("./.git/HEAD").expect("Something went wrong reading the Git file");
+
+    let branch_name = git_head
+        .split("heads/")
+        .nth(1)
+        .unwrap()
+        .split_whitespace()
+        .nth(0)
+        .unwrap();
+
+    let now: DateTime<Utc> = Utc::now();
+    let timestamp = now.format("%a %b %e %T %Y");
+
+    let msg = format!(
+        "[{}] <{}>\n{} by {}",
+        branch_name, config.message, timestamp, config.user
+    );
+    let git_commit = Command::new("/usr/local/bin/git")
         .arg("add")
         .arg(".")
-        .spawn()
+        .output()
+        .expect("command failed");
+
+    let _git_message = Command::new("/usr/local/bin/git")
+        .arg("commit")
+        .arg("-m")
+        .arg(msg)
+        .output()
         .expect("command failed");
 }
