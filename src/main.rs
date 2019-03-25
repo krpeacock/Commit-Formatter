@@ -64,8 +64,8 @@ fn format(config: Config) {
 
     let mut count = 0;
     for i in iter {
-        if count <= 1 {
-            branch_name = branch_name + i;
+        if count <= 2 {
+            branch_name = branch_name + "-" + i;
         }
         count += 1;
     }
