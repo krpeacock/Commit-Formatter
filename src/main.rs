@@ -53,17 +53,31 @@ fn format(config: Config) {
         .unwrap()
         .split_whitespace()
         .nth(0)
-        .unwrap()
-        .split("-")
-        .nth(0)
         .unwrap();
 
-    let iter: Vec<&str> = full_branch_name.split("-").collect();
+    let mut branch_name = String::from("");
+    let mut _ticket = String::from("");
 
-    let mut branch_name = iter[0].to_string();
-    if iter.len() > 1 {
-        branch_name += &iter[1].to_string()
+    if full_branch_name.contains("DEV") {
+        if full_branch_name.contains("/") {
+            if full_branch_name.find("/") < full_branch_name.find("DEV") {
+                _ticket = String::from(full_branch_name.split("/").nth(1).unwrap())
+            } else {
+                _ticket = String::from(full_branch_name)
+            }
+            println!("{:?}", full_branch_name.find('/'));
+        } else {
+            _ticket = String::from(full_branch_name);
+        }
+        let iter: Vec<&str> = _ticket.split("-").collect();
+
+        branch_name = String::from(iter[0]);
+        if iter.len() > 1 {
+            let joined_string = format!("{}-{}", iter[0], iter[1]);
+            branch_name = String::from(joined_string);
+        }
     }
+
     let now: DateTime<Utc> = Utc::now();
     let timestamp = now.format("%a %b %e %T %Y");
 
