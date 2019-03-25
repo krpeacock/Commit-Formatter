@@ -47,16 +47,28 @@ fn format(config: Config) {
     let git_head =
         fs::read_to_string("./.git/HEAD").expect("Something went wrong reading the Git file");
 
-    let branch_name = git_head
+    let full_branch_name = git_head
         .split("heads/")
         .nth(1)
         .unwrap()
         .split_whitespace()
         .nth(0)
         .unwrap()
-        .split("/")
+        .split("-")
         .nth(0)
         .unwrap();
+
+    let mut branch_name = "".to_string();
+
+    let iter = full_branch_name.split("-");
+
+    let mut count = 0;
+    for i in iter {
+        if count <= 1 {
+            branch_name = branch_name + i;
+        }
+        count += 1;
+    }
 
     let now: DateTime<Utc> = Utc::now();
     let timestamp = now.format("%a %b %e %T %Y");
