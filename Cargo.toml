@@ -1,5 +1,5 @@
 [package]
-name = "cmt"
+name = "test"
 version = "0.1.0"
 authors = ["kyle <kyle.peacock@cuyana.com>"]
 edition = "2018"
@@ -8,3 +8,5 @@ edition = "2018"
 clap = "2.26.0"
 git2 = "0.8.0"
 config = "0.9.2"
+dialoguer = "0.3.0"
+console = ">=0.3.0, <1.0.0"

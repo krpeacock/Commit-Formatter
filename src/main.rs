@@ -1,31 +1,50 @@
-extern crate clap;
 extern crate config;
-use clap::{Arg, App};
-use std::fs;
+extern crate console;
+extern crate dialoguer;
+use dialoguer::{theme::ColorfulTheme, Input};
 use std::collections::HashMap;
+use std::error::Error;
+use std::process::Command;
 
-fn main() {
-    let mut settings = config::Config::default();
-    settings
-        .merge(config::File::with_name("Settings")).unwrap();
-
-    let message = App::new("cmt")
-        .version("1.0")
-        .about("Formats a git commit message")
-        .author("Kyle Peacock")
-        .arg(Arg::with_name("message")
-            .short("m")
-            .long("message")
-            .value_name("MESSAGE")
-            .help("message to pass into your commit message")
-            .required(true)
-        )
-        .get_matches();
-    let response = message.value_of("message").unwrap_or("default.conf");
-    println!("Value for response: {}", response);
-
-    println!("{:?}",
-        settings.try_into::<HashMap<String, String>>().unwrap());
+#[derive(Debug)]
+struct Config {
+    user: String,
+    message: String,
 }
 
+fn init_config<'a>() -> Result<Option<Config>, Box<Error>> {
+    let mut settings = config::Config::default();
+    settings.merge(config::File::with_name("Settings")).unwrap();
+    let settings_map = settings.try_into::<HashMap<String, String>>().unwrap();
+    let user = &settings_map["user"];
 
+    let theme = ColorfulTheme {
+        ..ColorfulTheme::default()
+    };
+
+    let message = Input::with_theme(&theme)
+        .with_prompt("Commit Message")
+        .interact()?;
+
+    Ok(Some(Config {
+        message,
+        user: user.to_string(),
+    }))
+}
+
+fn main() {
+    match init_config() {
+        Ok(None) => println!("Aborted."),
+        Ok(Some(config)) => format(config),
+        Err(err) => println!("error: {}", err),
+    }
+}
+
+fn format(config: Config) {
+    println!("{:#?}", config);
+    let _make_commit = Command::new("/usr/local/bin/git")
+        .arg("add")
+        .arg(".")
+        .spawn()
+        .expect("command failed");
+}
