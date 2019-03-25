@@ -53,7 +53,7 @@ fn format(config: Config) {
         .nth(0)
         .unwrap();
 
-    let mut branch_name = String::from("");
+    let mut branch_name = String::from(full_branch_name);
     let mut _ticket = String::from("");
 
     // Logic for parsing our particular branch naming convention
