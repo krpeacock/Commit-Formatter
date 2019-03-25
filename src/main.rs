@@ -58,18 +58,12 @@ fn format(config: Config) {
         .nth(0)
         .unwrap();
 
-    let mut branch_name = "".to_string();
+    let iter: Vec<&str> = full_branch_name.split("-").collect();
 
-    let iter = full_branch_name.split("-");
-
-    let mut count = 0;
-    for i in iter {
-        if count <= 2 {
-            branch_name = branch_name + "-" + i;
-        }
-        count += 1;
+    let mut branch_name = iter[0].to_string();
+    if iter.len() > 1 {
+        branch_name += &iter[1].to_string()
     }
-
     let now: DateTime<Utc> = Utc::now();
     let timestamp = now.format("%a %b %e %T %Y");
 
