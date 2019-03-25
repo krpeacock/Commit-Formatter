@@ -1,8 +1,6 @@
-extern crate chrono;
 extern crate config;
 extern crate console;
 extern crate dialoguer;
-use chrono::{DateTime, Utc};
 use dialoguer::{theme::ColorfulTheme, Input};
 use std::collections::HashMap;
 use std::error::Error;
@@ -79,13 +77,7 @@ fn format(config: Config) {
         }
     }
 
-    let now: DateTime<Utc> = Utc::now();
-    let timestamp = now.format("%a %b %e %T %Y");
-
-    let msg = format!(
-        "[{}] <{}>\n{} by {}",
-        branch_name, config.message, timestamp, config.user
-    );
+    let msg = format!("[{}] {}", branch_name, config.message);
     let _git_add = Command::new("/usr/local/bin/git")
         .arg("add")
         .arg(".")
