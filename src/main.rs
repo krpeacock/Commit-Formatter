@@ -6,7 +6,6 @@ use chrono::{DateTime, Utc};
 use dialoguer::{theme::ColorfulTheme, Input};
 use std::collections::HashMap;
 use std::error::Error;
-use std::fmt;
 use std::fs;
 use std::process::Command;
 
@@ -63,7 +62,7 @@ fn format(config: Config) {
         "[{}] <{}>\n{} by {}",
         branch_name, config.message, timestamp, config.user
     );
-    let git_commit = Command::new("/usr/local/bin/git")
+    let _git_add = Command::new("/usr/local/bin/git")
         .arg("add")
         .arg(".")
         .output()
