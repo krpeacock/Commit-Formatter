@@ -1,5 +1,5 @@
 [package]
-name = "test"
+name = "cmt"
 version = "0.1.0"
 authors = ["kyle <kyle.peacock@cuyana.com>"]
 edition = "2018"

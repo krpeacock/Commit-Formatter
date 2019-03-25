@@ -58,6 +58,8 @@ fn format(config: Config) {
     let mut branch_name = String::from("");
     let mut _ticket = String::from("");
 
+    // Logic for parsing our particular branch naming convention
+    // E.G kyle/DEV-1234-descriptive-comments
     if full_branch_name.contains("DEV") {
         if full_branch_name.contains("/") {
             if full_branch_name.find("/") < full_branch_name.find("DEV") {
@@ -65,7 +67,6 @@ fn format(config: Config) {
             } else {
                 _ticket = String::from(full_branch_name)
             }
-            println!("{:?}", full_branch_name.find('/'));
         } else {
             _ticket = String::from(full_branch_name);
         }
