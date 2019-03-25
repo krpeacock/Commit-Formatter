@@ -53,6 +53,9 @@ fn format(config: Config) {
         .unwrap()
         .split_whitespace()
         .nth(0)
+        .unwrap()
+        .split("/")
+        .nth(0)
         .unwrap();
 
     let now: DateTime<Utc> = Utc::now();
