@@ -2,7 +2,6 @@ extern crate config;
 extern crate console;
 extern crate dialoguer;
 use dialoguer::{theme::ColorfulTheme, Input};
-use std::collections::HashMap;
 use std::error::Error;
 use std::fs;
 use std::process::Command;
@@ -69,13 +68,22 @@ fn format(config: Config) {
     }
 
     let msg = format!("[{}] {}", branch_name, config.message);
-    let _git_add = Command::new("/usr/local/bin/git")
+
+    let mut settings = config::Config::default();
+    settings
+        // Add in `./Settings.toml`
+        .merge(config::File::with_name("Settings"))
+        .unwrap();
+
+    let gitpath = settings.get::<String>("gitpath").unwrap();
+
+    let _git_add = Command::new(&gitpath)
         .arg("add")
         .arg(".")
         .output()
         .expect("command failed");
 
-    let _git_message = Command::new("/usr/local/bin/git")
+    let _git_message = Command::new(&gitpath)
         .arg("commit")
         .arg("-m")
         .arg(msg)
